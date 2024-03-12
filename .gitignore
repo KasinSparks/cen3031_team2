@@ -1,2 +1,4 @@
-backend/build
+build
 secrets
+
+node_modules

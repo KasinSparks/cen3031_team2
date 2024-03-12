@@ -1,8 +1,9 @@
 #include "crow.h"
+#include "crow/middlewares/cors.h"
 
 int main()
 {
-    crow::SimpleApp app;
+    crow::App<crow::CORSHandler> app;
 
     CROW_ROUTE(app, "/")([](){
         return "Hello world";
@@ -19,6 +20,10 @@ int main()
     CROW_ROUTE(app,"/hello/<int>")
     ([](int count){
         return crow::response(std::to_string(count));
+    });
+
+    CROW_ROUTE(app, "/testapi")([](){
+        return "Connected";
     });
 
     app.port(8080).run();
