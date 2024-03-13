@@ -3,3 +3,5 @@ secrets
 
 node_modules
 .vs
+
+*.so*
