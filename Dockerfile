@@ -10,7 +10,11 @@ RUN unzip instantclient-basic-linux.x64-21.13.0.0.0dbru.zip && unzip instantclie
 
 COPY ./ /cen3031_team2
 
-RUN cd cen3031_team2/backend && mkdir build && cmake ..
+RUN echo "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/cen3031_team2/backend/include/instantclient_21_13/linux_libs/" >> .bashrc
+
+RUN cd cen3031_team2/backend/include/instantclient_21_13/ && mkdir linux_libs && cp /instantclient_21_13/*.so* ./linux_libs/ && cd /
+
+RUN mkdir /cen3031_team2/build && cd /cen3031_team2/build/ && cmake ..
 
 EXPOSE 8080
 EXPOSE 3000
