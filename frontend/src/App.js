@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
+import MySubmitButton, { MyTestForm } from './db_test_conn.js'
+
 class MyTest extends Component {
     constructor(props) {
         super(props);
@@ -45,6 +47,7 @@ function App() {
           Learn React
         </a>
         <MyTest />
+        <MyTestForm />
       </header>
     </div>
   );
