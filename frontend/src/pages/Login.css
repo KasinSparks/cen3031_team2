@@ -1,0 +1,48 @@
+.Login {
+  background-color: #e7e9f1;
+  text-align: center;
+  color: #2a3653;
+}
+
+body {
+  margin: 0; /* Remove default body margin */
+  padding: 0; /* Remove default body padding */
+  background-color: #e7e9f1; /* Set your desired background color */
+}
+
+.button {
+  margin-top: 20px;
+  border: none;
+  color: white;
+  background-color: #2a3653;
+  padding: 10px 42px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.Login-header {
+  background-color: #e7e9f1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: left;
+  font-size: calc(10px + 2vmin);
+  color: black;
+}
+
+select {
+  /* Add desired styling */
+  width: 150px;
+  padding: 4px;
+  font-size: 13px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #606060; /* Text color */
+}

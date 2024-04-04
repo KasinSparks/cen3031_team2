@@ -1,0 +1,26 @@
+.navbar {
+  list-style-type: none;
+  margin: 1px;
+  padding: 13px;
+  color: #2a3653;
+  background-color: #2a3653;
+}
+
+.navbar li {
+  display: inline-block;
+  margin-right: 25px; /* Adjust spacing between navbar items */
+}
+
+.navbar li:first-child {
+  margin-right: 200px;
+}
+
+.navbar li:last-child {
+  margin-right: 0; /* Remove margin from the last navbar item */
+}
+
+.navbar li a {
+  text-decoration: none;
+  color: white; /* Adjust link color as needed */
+  background-color: #2a3653;
+}

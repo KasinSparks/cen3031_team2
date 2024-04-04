@@ -1,0 +1,70 @@
+.Home {
+  background-color: #e7e9f1;
+  text-align: center;
+}
+
+body {
+  margin: 0; /* Remove default body margin */
+  padding: 0; /* Remove default body padding */
+  background-color: #e7e9f1; /* Set your desired background color */
+}
+
+.Home-header {
+  background-color: #e7e9f1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: left;
+  font-size: calc(10px + 2vmin);
+  color: black;
+}
+
+.container {
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  height: 100vh;
+  padding: 0 20px;
+}
+
+.button {
+  margin-top: 20px;
+  border: none;
+  color: white;
+  background-color: #2a3653;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.feature {
+  flex: 1;
+  color: #2a3653;
+}
+.feature1 {
+  /* Set the width of feature1 to occupy 70% of the screen */
+  flex: 60%;
+}
+
+.feature2 {
+  /* Set the width of feature2 to occupy 30% of the screen */
+  flex: 40%;
+}
+
+.textbox {
+  margin-left: 10px;
+  padding: 10px; /* Add padding for spacing inside the textbox */
+  border: 1px solid #ccc; /* Add border for a clean appearance */
+  border-radius: 5px; /* Add rounded corners */
+  background-color: #2a3653; /* Set background color */
+  color: white; /* Set text color */
+  font-size: 16px; /* Set font size */
+  width: 200px; /* Set width */
+  outline: none; /* Remove default focus outline */
+}

@@ -2,14 +2,6 @@ project(backend_server)
 
 include_directories(include)
 
-add_executable(backend_server)
-
-target_sources(backend_server PRIVATE src/main.cpp)
-
-
-
-
-project(database_test)
 
 if (WIN32)
     include_directories(include/instantclient_21_13/win32_sdk/include)
@@ -31,7 +23,7 @@ elseif (UNIX)
     link_libraries(pthread)
 endif()
 
-add_executable(database_test src/testdb.cpp)
+add_executable(backend_server)
 
-target_sources(database_test PRIVATE src/testdb.cpp)
+target_sources(backend_server PRIVATE src/main.cpp)
 
