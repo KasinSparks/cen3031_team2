@@ -3,6 +3,32 @@
 
 // Not the most robust parser; may not report all errors
 // NOTE: Use with caution.
+static void parse_simple_csv(const std::string &in, std::vector<std::string> &result) {
+    // Check for empty string
+    if (in.length() == 0) {
+        throw std::runtime_error("Tried to parse an empty string.");
+    }
+
+    // Go until end of string
+    size_t i = 0;
+    size_t last_pos = i;
+    while (i < in.length()) {
+        // Skip whitespace
+        if (in[i] == ',') {
+            result.push_back(in.substr(last_pos, (i - last_pos)));
+            last_pos = i + 1;
+        }
+
+        i++;
+    }
+
+    if (last_pos < in.length() && i != last_pos) {
+        result.push_back(in.substr(last_pos, (i - last_pos)));
+    }
+}
+
+// Not the most robust parser; may not report all errors
+// NOTE: Use with caution.
 static void parse_req_cols(const std::string &in, std::vector<std::string> &result) {
     // Check for empty string
     if (in.length() == 0) {

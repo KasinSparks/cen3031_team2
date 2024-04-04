@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import Navbar from "./Navbar";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Bookmarks from "./pages/Bookmarks";
+import Search from "./pages/Search";
+import BackendTest from "./BackendTest";
+import { Route, Routes } from "react-router-dom";
 
-import MySubmitButton, { MyTestForm } from './db_test_conn.js'
+/*import MySubmitButton, { MyTestForm } from './db_test_conn.js'*/
 
 class MyTest extends Component {
     constructor(props) {
@@ -32,23 +37,18 @@ class MyTest extends Component {
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <MyTest />
-        <MyTestForm />
-      </header>
+    <div className="App">     
+        <Navbar />
+            <Routes>
+                <Route path="/pages/Home" element={<Home />} />
+                <Route path="/pages/Login" element={<Login />} />
+                <Route path="/pages/Bookmarks" element={<Bookmarks />} />
+                <Route path="/pages/Search" element={<Search />} />
+                <Route path="/BackendTest" element={<BackendTest />} />
+            </Routes>
+        {/* <MyTest/>   */}
+        {/*<MyTest />
+        <MyTestForm />*/}
     </div>
   );
 }

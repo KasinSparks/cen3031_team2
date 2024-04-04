@@ -8,7 +8,7 @@ export default function MySubmitButton() {
                 "NumOfCols=9&" +
                 "SELECT=*" +
                 "&" +
-                "FROM=CENHealthData" +
+                "FROM=Kasinsparks.CENHealthLaw" +
                 "&" +
                 "WHERE=LocationDesc='" +
                 document.getElementById("Location").value +
@@ -32,11 +32,11 @@ export class MyTestForm extends Component {
     }
 
     callAPI() {
-        fetch("http://localhost:8080/datafilters/CENHealthData/LocationDesc")
+        fetch("http://localhost:8080/datafilters/KAsinsparks.CENHealthData/LocationDesc")
             .then(res => res.json())
             .then(res => this.setState({ locationCol : res }))
             .catch(err => err);
-        fetch("http://localhost:8080/datafilters/CENHealthData/Year")
+        fetch("http://localhost:8080/datafilters/kasinsparks.CENHealthData/Year")
             .then(res => res.json())
             .then(res => this.setState({ yearCol : res }))
             .catch(err => err);
