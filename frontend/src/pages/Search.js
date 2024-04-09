@@ -69,7 +69,7 @@ function SubmitButton({ list, columns }) {
         }
         console.log(whereClause);
 
-        fetch("http://localhost:8080/get_tuples", {
+        fetch("/get_tuples", {
             method: "POST",
             body:
                 "NumOfCols=10&" +
@@ -109,25 +109,26 @@ function Search() {
 
     useEffect(() => {
         const fetchStateNameCol = async () => {
-            const stateNameRes = await fetch("http://localhost:8080/datafilters/kasinsparks.CENLaw/StateName");
+            const stateNameRes = await fetch("/datafilters/kasinsparks.CENLaw/StateName");
             const stateNameResult = await stateNameRes.json();
             setStateNameCol(stateNameResult);
         }
         const fetchMeasureDescCol = async () => {
-            const measureDescRes = await fetch("http://localhost:8080/datafilters/kasinsparks.CENLaw/MeasureDesc");
+            const measureDescRes = await fetch("/datafilters/kasinsparks.CENLaw/MeasureDesc");
             const measureDescResult = await measureDescRes.json();
             setMeasureDescCol(measureDescResult);
         }
         const fetchProvisionGroupDescCol = async () => {
-            const provisionGroupDescRes = await fetch("http://localhost:8080/datafilters/kasinsparks.CENLaw/ProvisionGroupDesc");
+            const provisionGroupDescRes = await fetch("/datafilters/kasinsparks.CENLaw/ProvisionGroupDesc");
             const provisionGroupDescResult = await provisionGroupDescRes.json();
             setProvisionGroupDescCol(provisionGroupDescResult);
         }
         const fetchProvisionDescCol = async () => {
-            const provisionDescRes = await fetch("http://localhost:8080/datafilters/kasinsparks.CENLaw/ProvisionDesc");
+            const provisionDescRes = await fetch("/datafilters/kasinsparks.CENLaw/ProvisionDesc");
             const provisionDescResult = await provisionDescRes.json();
             setProvisionDescCol(provisionDescResult);
         }
+        console.log(stateNameCol)
 
         fetchStateNameCol();
         fetchMeasureDescCol();

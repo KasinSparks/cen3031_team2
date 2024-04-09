@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 export default function MySubmitButton() {
     function handleClick() {
-        fetch("http://localhost:8080/get_tuples", {
+        fetch("/get_tuples", {
             method: "POST",
             body: 
                 "NumOfCols=9&" +
@@ -32,11 +32,11 @@ export class MyTestForm extends Component {
     }
 
     callAPI() {
-        fetch("http://localhost:8080/datafilters/KAsinsparks.CENHealthData/LocationDesc")
+        fetch("/datafilters/KAsinsparks.CENHealthData/LocationDesc")
             .then(res => res.json())
             .then(res => this.setState({ locationCol : res }))
             .catch(err => err);
-        fetch("http://localhost:8080/datafilters/kasinsparks.CENHealthData/Year")
+        fetch("datafilters/kasinsparks.CENHealthData/Year")
             .then(res => res.json())
             .then(res => this.setState({ yearCol : res }))
             .catch(err => err);

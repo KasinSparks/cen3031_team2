@@ -1,6 +1,6 @@
 build
 secrets
-
+backend/src/.env
 node_modules
 .vs
 
