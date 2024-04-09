@@ -62,13 +62,16 @@ def datafilters(table_name, column_name):
 
 @app.route('/get_tuples', methods=['POST'])
 def get_tuples():
-    content_type = request.headers.get('Content-Type')
-    if content_type == 'application/json':
-        json = request.json
-        count = 0
+    if request.method == 'POST':
+        #print(request)
+        #print(request.get_data())
 
-        body_vals={}
-        parse_post_body_params(json.body, body_vals)
+        body_vals = parse_post_body_params(request.get_data().decode('utf-8'))
+        #print(body_vals)
+        payload = {
+            "columns" : [],
+            "data" : []
+        }
 
         sql_stmt = "SELECT " + body_vals["SELECT"]
         sql_stmt += " FROM " + body_vals["FROM"]
@@ -89,18 +92,25 @@ def get_tuples():
             print("does not match number of columns supplied: ", len(column_names))
 
         for i in range(num_of_cols):
-            json["columns"][i]["key"] = column_names[i]
-            json["columns"][i]["name"] = column_names[i]
+            payload["columns"].append(
+                    { 
+                        "key" : column_names[i],
+                        "name" : column_names[i],
+                    }
+            )
         with pool.acquire() as connection:
             with connection.cursor() as cursor:
                 rs = cursor.execute(sql_stmt)
-                for i in range(num_of_cols):
-                    json["data"][count][column_names[i]] = rs.getString(i + 1)
-                count+=1
+                rows = cursor.fetchall()
+                for r in rows:
+                    #print(r)
+                    temp_dict = {}
+                    for i in range(num_of_cols):
+                        temp_dict[column_names[i]] = r[i]
+                    payload["data"].append(temp_dict)
 
-        return json
-    else:
-        return 'Content-Type not supported!'
+        
+        return jsonify(payload)
 
 
 
