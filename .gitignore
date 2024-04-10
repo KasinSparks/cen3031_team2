@@ -1,7 +1,11 @@
 build
 secrets
-
+backend/src/.env
+.env
+__pycache__
 node_modules
 .vs
+
+.venv
 
 *.so*

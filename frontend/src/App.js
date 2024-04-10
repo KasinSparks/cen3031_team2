@@ -16,7 +16,7 @@ class MyTest extends Component {
     }
 
     callAPI() {
-        fetch("http://localhost:8080/testapi")
+        fetch("/testapi")
             .then(res => res.text())
             .then(res => this.setState({ apiResponse: res }))
             .catch(err => err);
@@ -46,9 +46,6 @@ function App() {
                 <Route path="/pages/Search" element={<Search />} />
                 <Route path="/BackendTest" element={<BackendTest />} />
             </Routes>
-        {/* <MyTest/>   */}
-        {/*<MyTest />
-        <MyTestForm />*/}
     </div>
   );
 }
