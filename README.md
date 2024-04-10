@@ -32,7 +32,7 @@ The semester group project for CEN3031
 
    1.1.10. Download and install [Python](https://www.python.org/downloads/)
 
-   1.1.11. Install necessary dependences (Flask, oracledb, python-dotenv)
+   1.1.11. Install necessary dependences (Flask, oracledb, python-dotenv, flask-bcrypt)
 
    1.1.11.a. (OPTIONAL) create a virtual environment for the application development so python packages do not conflict and are local to this application.
         
@@ -45,7 +45,7 @@ The semester group project for CEN3031
             Format 1: `python -m pip install`
             Format 2: `pip install`
 
-             * `pip install Flask oracledb python-dotenv` 
+             * `pip install Flask oracledb python-dotenv flask-bcrypt` 
 
    1.1.13. Goto section 2: "Connecting to the DB"
 

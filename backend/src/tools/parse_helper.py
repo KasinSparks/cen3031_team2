@@ -61,12 +61,12 @@ def parse_post_body_params(body) -> {}:
     if last_pos != i:
         fields.append(body[last_pos : last_pos + (i - last_pos)])
     
-    print(fields)
+    #print(fields)
     for field in fields:
-        print(field)
+        #print(field)
         j = 0
         while True:
-            print(field[j])
+            #print(field[j])
             if field[j] == '=':
                 temp = field[0 : j]
                 output[temp] = field[j + 1 : (j + 1) + (len(field) - j - 1)]
