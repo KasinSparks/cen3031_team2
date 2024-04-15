@@ -84,7 +84,6 @@ function Search() {
             const provisionDescResult = await provisionDescRes.json();
             setProvisionDescCol(provisionDescResult);
         }
-        console.log(stateNameCol)
 
         fetchStateNameCol();
         fetchMeasureDescCol();
