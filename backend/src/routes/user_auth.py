@@ -6,9 +6,9 @@ def login_user(db_pool, bcrypt, email, password):
     user_creds = {}
     with db_pool.acquire() as connection:
         with connection.cursor() as cursor:
-            sql = '''SELECT UserID, Password 
+            sql = '''SELECT UserID, Password, FirstName, LastName
                      FROM {}.CENUsers
-                     WHERE Email={}'''.format(sql_prepend, email)
+                     WHERE Email=\'{}\''''.format(sql_prepend, email)
             cursor.execute(sql)
             user_creds = cursor.fetchall()
             if (len(user_creds) < 1):
@@ -20,7 +20,7 @@ def login_user(db_pool, bcrypt, email, password):
 
     if (bcrypt.check_password_hash(str(user_creds[1]), str(password))):
         session['user_id'] = user_creds[0]
-        return '200'
+        return 'Welcome ' + user_creds[2] + " " + user_creds[3]
 
     return "Invalid password"
 
@@ -35,11 +35,21 @@ def logout_user():
     return '200'
 
 def create_user(db_pool, bcrypt, email, password, fname, lname):
+    if (email == ""):
+        return "Must enter an email" 
+    elif (password == ""):
+        return "Must enter a password" 
+    elif (fname == ""):
+        return "Must enter a first name" 
+    elif (lname == ""):
+        return "Must enter a last name" 
+
+
     with db_pool.acquire() as connection:
         with connection.cursor() as cursor:
             sql = '''SELECT Email 
                      FROM {}.CENUsers
-                     WHERE Email={}'''.format(sql_prepend, email)
+                     WHERE Email=\'{}\''''.format(sql_prepend, email)
             cursor.execute(sql)
             if (len(cursor.fetchall()) > 0):
                 return "Email already registered"
@@ -61,7 +71,7 @@ def create_user(db_pool, bcrypt, email, password, fname, lname):
 
             sql = '''INSERT INTO {}.CENUsers
                      (UserID, FirstName, LastName, Password, Email, Verified, AccountType)
-                     VALUES({}, {}, {}, \'{}\', {}, {}, \'{}\')'''.format(sql_prepend, highest_user_id + 1, fname, lname, hashed_pass, email, 0, 'REG')
+                     VALUES({}, \'{}\', \'{}\', \'{}\', \'{}\', {}, \'{}\')'''.format(sql_prepend, highest_user_id + 1, fname, lname, hashed_pass, email, 0, 'REG')
 
             print(sql)
             cursor.execute(sql) 
@@ -69,7 +79,7 @@ def create_user(db_pool, bcrypt, email, password, fname, lname):
         connection.commit()
 
     # Login the user after creating
-    login_user(db_pool, bcyrpt, email, password)
+    login_user(db_pool, bcrypt, email, password)
     return '200'
 
 ## TODO
