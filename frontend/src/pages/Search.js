@@ -25,58 +25,14 @@ function SubmitButton({ list, columns }) {
             }
         }
 
-        var stateNameField = "";
-        var measureDescField = "";
-        var provisionGroupField = "";
-        var provisionDescField = "";
-        var stateNameHasWhereCondition = false;
-        var measureDescHasWhereCondition = false;
-        var provisionGroupHasWhereCondition = false;
-        var provisionDescHasWhereCondition = false;
-
-        if (document.getElementById("StateName").value !== "" && document.getElementById("StateName").value !== "All") {
-            stateNameField = "StateName='" +
-                document.getElementById("StateName").value;
-            stateNameHasWhereCondition = true;
-        }
-   
-        if (document.getElementById("MeasureDesc").value !== "" && document.getElementById("MeasureDesc").value !== "All") {
-            measureDescField = "'AND MeasureDesc='" +
-                document.getElementById("MeasureDesc").value;
-            measureDescHasWhereCondition = true;
-        }
-
-        if (document.getElementById("ProvisionGroupDesc").value !== "" && document.getElementById("ProvisionGroupDesc").value !== "All") {
-            provisionGroupField = "' AND ProvisionGroupDesc='" +
-                document.getElementById("ProvisionGroupDesc").value;
-            provisionGroupHasWhereCondition = true;
-        }
-
-        if (document.getElementById("ProvisionDesc").value !== "" && document.getElementById("ProvisionDesc").value !== "All") {
-            provisionDescField = "' AND ProvisionDesc='" +
-                document.getElementById("ProvisionDesc").value;
-            provisionDescHasWhereCondition = true;
-        }
-
-        var whereClause = "";
-        if (stateNameHasWhereCondition || measureDescHasWhereCondition || provisionGroupHasWhereCondition || provisionDescHasWhereCondition) {
-            whereClause = "&" +
-                "WHERE="
-                + stateNameField
-                + measureDescField
-                + provisionGroupField
-                + provisionDescField + "'";
-        }
-        console.log(whereClause);
-
-        fetch("/get_tuples", {
+        fetch("/get_tuples/KASINSPARKS.CENLaw", {
             method: "POST",
-            body:
-                "NumOfCols=10&" +
-                "SELECT=stateName,measureDesc,provisionGroupDesc,provisionDesc,provisionValue,citation,provisionAltValue,datatype,enactedDate,effectiveDate" +
-                "&" +
-                "FROM=Kasinsparks.CENLaw" +
-                whereClause
+            body: '{' +
+                  '"StateName":"' + document.getElementById("StateName").value + '",' +
+                  '"MeasureDesc":"' + document.getElementById("MeasureDesc").value + '",' +
+                  '"ProvisionGroupDesc":"' + document.getElementById("ProvisionGroupDesc").value + '",' +
+                  '"ProvisionDesc":"' + document.getElementById("ProvisionDesc").value + '"' +
+                  '}'
         })
             .then(res => res.json())
             .then(json => setDataset({ data: json }))
