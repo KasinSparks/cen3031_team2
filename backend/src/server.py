@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_file, url_for
 from flask_bcrypt import Bcrypt
 from dotenv import load_dotenv
 import oracledb
@@ -187,6 +187,7 @@ def route_curr_user():
 @app.route('/topqueries/get/<int:count>', methods=['GET'])
 def route_get_top_queries(count):
     return get_top_queries(pool, count);
+
 
 if __name__ == '__main__':
     pool = start_pool()
