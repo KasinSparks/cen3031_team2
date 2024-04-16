@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import usePrevious from 'react-use-previous';
-import "./Login.css";
+import "./Search.css";
 import CustomDropdown from "./CustomDropdown";
 import DataViewer from "./DataViewer";
 function SubmitButton({ list, columns }) {
@@ -37,6 +36,7 @@ function SubmitButton({ list, columns }) {
             .then(res => res.json())
             .then(json => setDataset({ data: json }))
             .catch(err => err);
+        console.log(dataset.data.data)
         setValidationMessage("");
         setShowData(true);
     }
@@ -46,12 +46,44 @@ function SubmitButton({ list, columns }) {
             <button className="button" onClick={handleClick}>
                 Submit
             </button>
+            {showData && <Download dataset={dataset.data.data}/>}
             <div>
                 {validationMessage && (
                     <p style={{ color: "#2a3653" }}>{validationMessage}</p>
                 )}
             </div>
             {showData && <DataViewer dataset={dataset} columns={columns} />}
+        </div>
+    );
+}
+
+function Download(dataset) {
+    const [validDownload, setValidDownload] = useState(true);
+    function handleClick() {
+        /**
+         * Javascript resources:
+         * https://developer.mozilla.org/en-US/docs/Web/API/Blob
+         */
+
+        const json = new Blob([JSON.stringify(dataset, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(json);
+        const link = document.createElement("a");
+        link.download = 'data.json'
+        link.href = url;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        console.log('click');
+    }
+
+
+
+    return (
+        <div>
+            <button className="button" onClick={handleClick}>
+                Download
+            </button>
         </div>
     );
 }
@@ -119,7 +151,7 @@ function Search() {
 
     return (
         <body>
-            <div className="Login">
+            <div className="Search">
                 <br />
                 <h3>Select a state or territory:</h3>
                 <CustomDropdown
