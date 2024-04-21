@@ -10,6 +10,7 @@ from tools.parse_helper import *
 from routes.bookmark_routes import *
 from routes.user_auth import *
 from routes.top_queries import *
+from routes.feedback import *
 
 app = Flask(__name__)
 
@@ -202,6 +203,25 @@ def route_curr_user():
 @app.route('/topqueries/get/<int:count>', methods=['GET'])
 def route_get_top_queries(count):
     return get_top_queries(pool, count);
+
+
+@app.route('/feedback/get/<int:user_id>', methods=['GET'])
+def route_get_feedback(user_id):
+    if (user_id == 0):
+        return get_feedback(pool, None)
+
+    return get_feedback(pool, user_id)
+
+
+@app.route('/feedback/add', methods=['POST'])
+def route_add_feedback():
+    if (request.method != 'POST'):
+        return 'Use POST to get data'
+    
+    # Decode the json provided from the frontend. 
+    # NOTE: json.loads is very picky about formating of json
+    json_post_data = json.loads(request.get_data().decode('utf-8'))
+    return add_feedback(pool, json_post_data)
 
 
 if __name__ == '__main__':

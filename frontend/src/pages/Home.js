@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import "./Home.css";
 
 function Feature1() {
@@ -46,18 +46,39 @@ function Feature1() {
 }
 
 function Feature2() {
+    const [prevFeedback, setPrevFeedback] = useState([]);
+
+    useEffect(() => {
+        fetch("/feedback/get/0")
+            .then(res => res.json())
+            .then(json => setPrevFeedback(json));
+    }, []);
+
+
+    var top_three = [];
+    if (prevFeedback.length > 3) {
+        top_three = prevFeedback.slice(0, 3);
+    } else {
+        top_three = prevFeedback;
+    }
+
+    const top_three_html = top_three.map((el) => 
+        <div>
+            {el["RATING"]} / 5
+            <br />
+            "{el["FEEDBACKTEXT"]}"
+            <br />
+            <i>- {el["FIRSTNAME"]} {el["LASTNAME"]}</i>
+            <br /> <br />
+        </div>
+    );
+
+    console.log(top_three_html);
+
   return (
     <div className="feature feature2">
       <div className="textbox">
-        "Great bookmark feature!" <br />
-        <i>-User 1</i>
-        <br /> <br />
-        "Extremely useful datasets." <br />
-        <i>-User 2</i>
-        <br /> <br />
-        "Very responsive to feedback." <br />
-        <i>-User 3</i>
-        <br /> <br />
+          {top_three_html}
       </div>
     </div>
   );
