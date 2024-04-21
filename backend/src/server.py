@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_file, url_for
 from flask_bcrypt import Bcrypt
 from dotenv import load_dotenv
 import oracledb
@@ -163,18 +163,33 @@ def route_delete_user_bookmark(tag):
 ## Login a user
 ## TODO: change this to a POST request so the user's password is not stored
 ##       in the url history
-## EXAMPLE: http://localhost:8080/login/'john.doe@ufl.edu'/12345
-@app.route('/login/<email>/<password>', methods=['GET'])
-def route_login_user(email, password):
-    return login_user(pool, bcrypt, email, password);
+## EXAMPLE: http://localhost:8080/login/
+@app.route('/login', methods=['POST'])
+def route_login_user():
+    if (request.method != 'POST'):
+        return 'Use POST to get data'
+    
+    # Decode the json provided from the frontend. 
+    # NOTE: json.loads is very picky about formating of json
+    json_post_data = json.loads(request.get_data().decode('utf-8'))
+
+
+    return login_user(pool, bcrypt, json_post_data["email"], json_post_data["password"]);
 
 ## Create a user
 ## TODO: change this to a POST request so the user's info and password is not 
 ##       stored in the url history
-## EXAMPLE: http://localhost:8080/login/create/'john.doe@ufl.edu'/12345/john/doe
-@app.route('/login/create/<email>/<password>/<fname>/<lname>', methods=['GET'])
-def route_create_user(email, password, fname, lname):
-    return create_user(pool, bcrypt, email, password, fname, lname);
+## EXAMPLE: http://localhost:8080/login/create
+@app.route('/login/create', methods=['POST'])
+def route_create_user():
+    if (request.method != 'POST'):
+        return 'Use POST to get data'
+    
+    # Decode the json provided from the frontend. 
+    # NOTE: json.loads is very picky about formating of json
+    json_post_data = json.loads(request.get_data().decode('utf-8'))
+
+    return create_user(pool, bcrypt, json_post_data["email"], json_post_data["password"], json_post_data["fname"], json_post_data["lname"]);
 
 @app.route('/logout', methods=['GET'])
 def route_logout_user():
@@ -188,6 +203,7 @@ def route_curr_user():
 @app.route('/topqueries/get/<int:count>', methods=['GET'])
 def route_get_top_queries(count):
     return get_top_queries(pool, count);
+
 
 @app.route('/feedback/get/<int:user_id>', methods=['GET'])
 def route_get_feedback(user_id):
