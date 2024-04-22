@@ -5,6 +5,7 @@ import Login from "./pages/Login";
 import Bookmarks from "./pages/Bookmarks";
 import Search from "./pages/Search";
 import BackendTest from "./BackendTest";
+import Comparison from "./pages/Comparison";
 import { Route, Routes } from "react-router-dom";
 
 /*import MySubmitButton, { MyTestForm } from './db_test_conn.js'*/
@@ -44,6 +45,7 @@ function App() {
                 <Route path="/pages/Login" element={<Login />} />
                 <Route path="/pages/Bookmarks" element={<Bookmarks />} />
                 <Route path="/pages/Search" element={<Search />} />
+                <Route path="/pages/Comparison" element={<Comparison />} />
                 <Route path="/BackendTest" element={<BackendTest />} />
             </Routes>
     </div>

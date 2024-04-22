@@ -46,3 +46,134 @@ select {
   background-color: #fff;
   color: #606060; /* Text color */
 }
+
+.form-container {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.form-input {
+  display: block;
+  margin: 10px auto;
+}
+
+.form-input label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-input input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+
+}
+
+.form-submit {
+  margin-top: 20px;
+  border: none;
+  color: white;
+  background-color: #2a3653;
+  padding: 6px 35px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.createuser-button {
+  margin-top: 20px;
+  border: none;
+  color: white;
+  background-color: #2a3653;
+  padding: 8px 25px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.comp-feature {
+  display: flex;
+
+}
+
+.scrollable-container {
+  flex: 1;
+  overflow-x: auto;
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+.scrollable-content {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.compare-button {
+  border: none;
+  color: white;
+  background-color: #2a3653;
+  padding: 8px 25px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.separator {
+  width: 1px;
+  background-color: #ccc; /* Color of the separator line */
+}
+
+.bookmark-button {
+  margin-top: 20px;
+  margin-bottom: 40px;
+  border: none;
+  color: white;
+  background-color: #2a3653;
+  padding: 10px 42px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+ul {
+  list-style-type: none; /* Remove default bullet points */
+  padding: 0; /* Remove default padding */
+  margin: 0; /* Remove default margin */
+}
+
+/* Style for list items */
+.bms li {
+  padding: 10px; /* Add padding to each list item */
+  border-bottom: 1px solid #ccc; /* Add a bottom border to separate list items */
+}
+
+.bms li:nth-child(even) {
+  background-color: #f2f2f2; /* Light gray background for even list items */
+}
+
+/* Style for odd list items */
+.bms li:nth-child(odd) {
+  background-color: #ffffff; /* White background for odd list items */
+}
+
+.bms li:first-child {
+  padding: 10px; /* Add padding to each list item */
+  border-top:1px solid #ccc;
+  border-bottom: 1px solid #ccc; 
+}
