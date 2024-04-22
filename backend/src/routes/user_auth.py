@@ -87,4 +87,3 @@ def is_verified_user(userid):
     return False
 
 
-

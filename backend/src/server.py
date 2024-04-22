@@ -195,6 +195,7 @@ def route_create_user():
     
     SendEmail(json_post_data["fname"], json_post_data["email"], "Welcome", 4)
 
+
     return create_user(pool, bcrypt, json_post_data["email"], json_post_data["password"], json_post_data["fname"], json_post_data["lname"]);
 
 @app.route('/logout', methods=['GET'])

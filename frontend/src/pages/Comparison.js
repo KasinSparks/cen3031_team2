@@ -1,48 +1,13 @@
 import React, { useState, useEffect } from "react";
-import "./Search.css";
+import usePrevious from 'react-use-previous';
+import "./Login.css";
 import CustomDropdown from "./CustomDropdown";
 import DataViewer from "./DataViewer";
-
-function ComparisonButton() {
-    const handleClick = () => {
-      window.location.href = './Comparison';
-    };
-  
-    return <button className="compare-button" onClick={handleClick}>Compare two datasets</button>;
-}
 
 function SubmitButton({ list, columns }) {
     const [validationMessage, setValidationMessage] = useState("");
     const [showData, setShowData] = useState(false);
-    const [tag, setTag] = useState("");
     const [dataset, setDataset] = useState({ data: [] });
-    const handleTagChange = (event) => {
-        setTag(event.target.value);
-      };
-
-    function BookmarkButton() {
-
-        const queryParams = {
-            state: "'" + document.getElementById("StateName").value + "'",
-            tag: "'" + tag + "'",
-            md: "'" + document.getElementById("MeasureDesc").value + "'",
-            pd: "'" + document.getElementById("ProvisionDesc").value + "'",
-            pgd: "'" + document.getElementById("ProvisionGroupDesc").value + "'",
-        }
-
-        const Url = `/bookmarks/add/?state=${queryParams["state"]}&tag=${queryParams["tag"]}&md=${queryParams["md"]}&pd=${queryParams["pd"]}&pgd=${queryParams["pgd"]}`
-
-        const handleBMClick = () => {
-            if (tag == ""){
-                return;
-            }
-            fetch(Url)
-                .then(res => res.text())
-                .catch(err => err);
-        };
-    
-        return(<button className="bookmark-button" onClick={handleBMClick}>Bookmark this query</button>);
-    }
 
     function handleClick() {
         if (!list || list.length === 0) {
@@ -64,16 +29,15 @@ function SubmitButton({ list, columns }) {
         fetch("/get_tuples/KASINSPARKS.CENLaw", {
             method: "POST",
             body: '{' +
-                  '"StateName":"' + document.getElementById("StateName").value + '",' +
-                  '"MeasureDesc":"' + document.getElementById("MeasureDesc").value + '",' +
-                  '"ProvisionGroupDesc":"' + document.getElementById("ProvisionGroupDesc").value + '",' +
-                  '"ProvisionDesc":"' + document.getElementById("ProvisionDesc").value + '"' +
+                  '"StateName":"' + list[0] + '",' +
+                  '"MeasureDesc":"' + list[1] + '",' +
+                  '"ProvisionGroupDesc":"' + list[2] + '",' +
+                  '"ProvisionDesc":"' + list[3] + '"' +
                   '}'
         })
             .then(res => res.json())
             .then(json => setDataset({ data: json }))
             .catch(err => err);
-        console.log(dataset.data.data)
         setValidationMessage("");
         setShowData(true);
     }
@@ -83,55 +47,16 @@ function SubmitButton({ list, columns }) {
             <button className="button" onClick={handleClick}>
                 Submit
             </button>
-            {showData && <Download dataset={dataset.data.data}/>}
             <div>
                 {validationMessage && (
                     <p style={{ color: "#2a3653" }}>{validationMessage}</p>
                 )}
             </div>
+            <div className="scrollable-container">
+                <div className="scrollable-content">
             {showData && <DataViewer dataset={dataset} columns={columns} />}
-            <div>{showData && <h3 style={{ color: "#2a3653" }}>Add this query as a bookmark?</h3>}</div>
-            <div>{showData && 
-            <input
-            type="text"
-            value={tag}
-            onChange={handleTagChange}
-            placeholder="Name your bookmark"
-          />}</div>
-            <br></br>
-            <div>{showData && <BookmarkButton />}</div>
-            <br></br><br></br>
-        </div>
-    );
-}
-
-function Download(dataset) {
-    const [validDownload, setValidDownload] = useState(true);
-    function handleClick() {
-        /**
-         * Javascript resources:
-         * https://developer.mozilla.org/en-US/docs/Web/API/Blob
-         */
-
-        const json = new Blob([JSON.stringify(dataset, null, 2)], { type: 'application/json' });
-        const url = URL.createObjectURL(json);
-        const link = document.createElement("a");
-        link.download = 'data.json'
-        link.href = url;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-        console.log('click');
-    }
-
-
-
-    return (
-        <div>
-            <button className="button" onClick={handleClick}>
-                Download
-            </button>
+            </div>
+            </div>
         </div>
     );
 }
@@ -164,6 +89,7 @@ function Search() {
             const provisionDescResult = await provisionDescRes.json();
             setProvisionDescCol(provisionDescResult);
         }
+        console.log(stateNameCol)
 
         fetchStateNameCol();
         fetchMeasureDescCol();
@@ -198,12 +124,8 @@ function Search() {
 
 
     return (
-        <div>
-        <div style={{textAlign: 'right', margin: '10px 20px 0px auto' }}>
-        <ComparisonButton/>
-        </div>
         <body>
-            <div className="Search">
+            <div className="Login">
                 <br />
                 <h3>Select a state or territory:</h3>
                 <CustomDropdown
@@ -241,9 +163,22 @@ function Search() {
             </div>
             <SubmitButton list={list} columns={columns} />
         </body>
-        </div>
     );
 }
 
+function Comparison() {
+    return (
+        <div className="comp-feature">
+            <div className="scrollable-container">
+          <Search/>
+          </div>
+      <div className="separator"></div>
+      <div className="scrollable-container">
+          <Search/>
+          </div>
+        </div>
 
-export default Search;
+      );
+};
+
+export default Comparison;
