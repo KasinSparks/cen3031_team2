@@ -1,15 +1,20 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_file, url_for
 from flask_bcrypt import Bcrypt
 from dotenv import load_dotenv
 import oracledb
 import os
 import json
 
+from email.mime.text import MIMEText  
+from email.mime.multipart import MIMEMultipart 
+import smtplib 
+
 from tools.parse_helper import *
 
 from routes.bookmark_routes import *
 from routes.user_auth import *
 from routes.top_queries import *
+from routes.feedback import *
 
 app = Flask(__name__)
 
@@ -187,6 +192,9 @@ def route_create_user():
     # Decode the json provided from the frontend. 
     # NOTE: json.loads is very picky about formating of json
     json_post_data = json.loads(request.get_data().decode('utf-8'))
+    
+    SendEmail(json_post_data["fname"], json_post_data["email"], "Welcome", 4)
+
 
     return create_user(pool, bcrypt, json_post_data["email"], json_post_data["password"], json_post_data["fname"], json_post_data["lname"]);
 
@@ -202,6 +210,105 @@ def route_curr_user():
 @app.route('/topqueries/get/<int:count>', methods=['GET'])
 def route_get_top_queries(count):
     return get_top_queries(pool, count);
+
+
+@app.route('/feedback/get/<int:user_id>', methods=['GET'])
+def route_get_feedback(user_id):
+    if (user_id == 0):
+        return get_feedback(pool, None)
+
+    return get_feedback(pool, user_id)
+
+
+@app.route('/feedback/add', methods=['POST'])
+def route_add_feedback():
+    if (request.method != 'POST'):
+        return 'Use POST to get data'
+    
+    # Decode the json provided from the frontend. 
+    # NOTE: json.loads is very picky about formating of json
+    json_post_data = json.loads(request.get_data().decode('utf-8'))
+    
+    return add_feedback(pool, json_post_data)
+        
+def SendEmail(username, userEmail, topic, responseType):
+    # Full credit to https://www.geeksforgeeks.org/how-to-send-automated-email-messages-in-python/ for module selection and overall approach.
+
+    # Ititializes connection to gmail sever and logs into product email account.
+    smtp = smtplib.SMTP('smtp.gmail.com', 587) 
+    smtp.ehlo() 
+    smtp.starttls() 
+    smtp.login('tabaccotracker@gmail.com', 'jmuk cznm zopr sfmq') 
+
+    # Assignment of strings for email options.
+    subject1 = "Tobacco Tracker: User Generated Accuracy Review"
+    subject2 = "Status Update: User Generated Accuracy Review"
+    subject3 = "Welcome to Tobacco Tracker!"
+    body1 = '''Hello {},
+
+We have received your accuracy review request regarding {}. At Tobacco Tracker, we are strongly committed to providing users with only the most accurate information available. As such, we thoroughly investigate every claim of inaccuracy we receive. 
+    
+We will provide you with an update after a final determination is made. Thank you for your email! User feedback is indispensable in our mission to make Tobacco Tracker the preeminent informational tool for users seeking lifesaving information on Youth Tobacco Access Prevention Laws. 
+
+Please be advised - this inbox is not monitored for replies.
+    '''.format(username, topic)
+
+    body2 = '''Hello {},
+
+We have completed an accuracy review based on the information you provided regarding {}. At this time, we have determined our current information is accurate. Please refer to our About section for information regarding our category definitions and inclusion criteria. If you still feel our determination was made in error, please feel free to submit an additional accuracy review request with updated information.
+
+Thank you again for your email! User feedback is indispensable in our mission to make Tobacco Tracker the preeminent informational tool for users seeking lifesaving information on Youth Tobacco Access Prevention Laws. 
+
+Please be advised - this inbox is not monitored for replies.
+    '''.format(username, topic)
+
+    body3 = '''Hello {},
+
+We have completed an acuracy review based on the information you provided regarding {}. At this time, we have decided to update our information. All changes are currently in effect on Tobacco Tracker. Also, public notices of updates will be displayed on the login screen for a period of 30 days.
+
+Thank you again for your email! User feedback is indispensable in our mission to make Tobacco Tracker the preeminent informational tool for users seeking lifesaving information on Youth Tobacco Access Prevention Laws. 
+
+Please be advised - this inbox is not monitored for replies.
+    '''.format(username, topic)
+    body4 = '''Hello {},
+    
+Welcome to Tobacco Tracker! This informational tool allows our users to gather lifesaving information on Youth Tobacco Access Prevention Laws.
+
+Here are a few things you can do to get started:
+
+1.	Check out our About section to learn more about our datasets and mission.
+2.	Search laws by state or territory, category of restricted behavior, and type of law. 
+3.	Bookmark searches for future review.
+4.	Submit feedback about our information and suggest future additions.
+
+We are thrilled you have joined us!
+
+Please be advised - this inbox is not monitored for replies.
+    '''.format(username)
+
+    # Constructs email depending on response type
+    email = MIMEMultipart()
+    if (responseType == 1):
+        email['Subject'] = subject1     
+        email.attach(MIMEText(body1))
+    elif (responseType == 2):
+        email['Subject'] = subject2     
+        email.attach(MIMEText(body2))
+    elif (responseType == 3):
+        email['Subject'] = subject2     
+        email.attach(MIMEText(body3))
+    else:
+        email['Subject'] = subject3     
+        email.attach(MIMEText(body4))
+  
+  
+    # Uses the smtp module to send email
+    smtp.sendmail(from_addr="tabaccotracker@gmail.com", 
+                  to_addrs=userEmail, msg=email.as_string()) 
+  
+     # close connection
+    smtp.quit()
+
 
 if __name__ == '__main__':
     pool = start_pool()

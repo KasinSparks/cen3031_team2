@@ -1,0 +1,68 @@
+.Search {
+  background-color: #e7e9f1;
+  text-align: center;
+  color: #2a3653;
+}
+
+body {
+  margin: 0; /* Remove default body margin */
+  padding: 0; /* Remove default body padding */
+  background-color: #e7e9f1; /* Set your desired background color */
+}
+
+.search-feature {
+  margin: 0; /* Remove default body margin */
+  padding: 0; /* Remove default body padding */
+  background-color: #e7e9f1; /* Set your desired background color */
+}
+
+.moved-search-feature {
+  position: fixed;
+  padding: 0; /* Remove default body padding */
+  background-color: #e7e9f1; /* Set your desired background color */
+  left: 0px;
+  margin: 10px 10px;
+}
+
+.button {
+  margin-top: 20px;
+  border: none;
+  color: white;
+  background-color: #2a3653;
+  padding: 10px 42px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.compare-button {
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  border: none;
+  color: white;
+  background-color: #2a3653;
+  padding: 10px 42px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 10px 10px;
+  cursor: pointer;
+  border-radius: 8px
+}
+
+.Search-header {
+  background-color: #e7e9f1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: left;
+  font-size: calc(10px + 2vmin);
+  color: black;
+}

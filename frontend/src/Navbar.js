@@ -21,6 +21,9 @@ function Navbar() {
         <li>
           <Link to="/pages/Bookmarks">Bookmarks</Link>
         </li>
+        <li>
+          <Link to="/pages/Feedback">Feedback</Link>
+        </li>
       </ul>
     </nav>
   );
