@@ -5,6 +5,7 @@ function SubmitButton() {
     const [errmsg, setErrmsg] = useState("");
 
     function handleClick() {
+        //upon clicking submit, we add feedback to dataset w/ associated user
         fetch("/feedback/add", {
             method: "POST",
             body: '{' +
@@ -33,6 +34,7 @@ function Feedback() {
     const [prevFeedback, setPrevFeedback] = useState([]);
 
     useEffect(() => {
+        // verifies if logged in user, then retrieves previous feedback if applicable
         fetch("/login/get_user_id")
             .then(res => res.text())
             .then(text => {
@@ -51,7 +53,7 @@ function Feedback() {
                 </tr>
         );
 
-    
+    //allow user to rate 1-5, provide feedback
     return (
         <div>
             <div className="Login">

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./CustomDropdown.css";
 
   function CustomDropdown({ id, options, list, updateList, return_index }) {
+    //stylizes plain dropdown and stores list to dynamically update
     const [selected, setSelected] = useState();
     const handleChange = (event) => {
       setSelected(event.target.value);

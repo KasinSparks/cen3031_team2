@@ -8,9 +8,8 @@ import BackendTest from "./BackendTest";
 import Comparison from "./pages/Comparison";
 import Feedback from "./pages/Feedback";
 
+// library allows user to be routed from page to page
 import { Route, Routes } from "react-router-dom";
-
-/*import MySubmitButton, { MyTestForm } from './db_test_conn.js'*/
 
 class MyTest extends Component {
     constructor(props) {
@@ -42,6 +41,7 @@ function App() {
   return (
     <div className="App">     
         <Navbar />
+            {/* contains list of all pages that user may be routed to */}
             <Routes>
                 <Route path="/pages/Home" element={<Home />} />
                 <Route path="/pages/Login" element={<Login />} />

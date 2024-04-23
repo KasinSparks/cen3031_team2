@@ -5,6 +5,7 @@ function Feature1() {
   return (
       <div className="feature feature1">
           <div>
+              {/* Provides basic info on the project */}
               <h4>Our Project</h4>
               Tobacco Tracker utilizes data gathered from the Centers for Disease Control and Prevention (CDC) to
               provide
@@ -35,6 +36,7 @@ function Feature1() {
               2023
           </div>
           <br/>
+          {/* Redirects user to relevant site upon click */}
           <a href="https://data.cdc.gov/Legislation/CDC-STATE-System-E-Cigarette-Legislation-Youth-Acc/8zea-kwnt/about_data">
               <button className="button">View Legislation Data</button>
           </a>
@@ -49,6 +51,7 @@ function Feature2() {
     const [prevFeedback, setPrevFeedback] = useState([]);
 
     useEffect(() => {
+        //fetch previous feedback to display to users
         fetch("/feedback/get/0")
             .then(res => res.json())
             .then(json => setPrevFeedback(json));
