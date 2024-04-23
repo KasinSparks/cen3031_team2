@@ -1,6 +1,7 @@
 from tools.table_prepend import sql_prepend
 from flask import jsonify
 
+## Returns the given number of top query results
 def get_top_queries(db_pool, num_of_rows):
     with db_pool.acquire() as connection:
         with connection.cursor() as cursor:
@@ -15,6 +16,9 @@ def get_top_queries(db_pool, num_of_rows):
 
     return jsonify(data)
 
+## Inserts new search into top query table if the search has not be done before.
+## If the search has been done at least once, update the number of times the 
+## search has been requested.
 def update_top_queries_table(db_pool, json_search_vals):
     sql = "SELECT QueryID FROM {}.CENTopQueries".format(sql_prepend)
     

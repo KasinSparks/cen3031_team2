@@ -1,3 +1,4 @@
+## IMPORTS
 from flask import Flask, jsonify, request, send_file, url_for
 from flask_bcrypt import Bcrypt
 from dotenv import load_dotenv
@@ -16,6 +17,7 @@ from routes.user_auth import *
 from routes.top_queries import *
 from routes.feedback import *
 
+# Create the Flask app
 app = Flask(__name__)
 
 # Bcrypt obj
@@ -25,8 +27,6 @@ bcrypt = Bcrypt(app)
 load_dotenv()
 
 # Load environment variables from .env file
-
-
 username = os.getenv("DB_USERNAME")
 password = os.getenv("DB_PASSWORD")
 host = os.getenv("DB_HOST")
@@ -36,12 +36,15 @@ service_name_or_SID = os.getenv("DB_SERVICE_NAME_OR_SID")
 # Set the secret key
 app.secret_key = os.getenv("SECRET_KEY")
 
+
+# Starts a connection with the DB with 4 workers
 def start_pool():
-    # Create database connection pool
     pool_min = 4
     pool_max = 4
     pool_inc = 0
-
+    
+    # Create database connection pool
+    # Username and Password are from the environment variables
     pool = oracledb.create_pool(
         user=username,
         password=password,
@@ -52,20 +55,28 @@ def start_pool():
     )
     return pool
 
-
+## Returns all tuples found in a given table.
 @app.route('/fetchtable/<string:table_name>')
 def fetchtable(table_name):
-    count = 0
+    # Connect to the database
     with pool.acquire() as connection:
         with connection.cursor() as cursor:
+            # Construct the query
             sql = "SELECT * FROM {}".format(table_name)
+            # execute the sql command
             cursor.execute(sql)
+            # Get all tuples in the resulting table
             rows = cursor.fetchall()
+            # Separate the headers from the table
             column_names = [col[0] for col in cursor.description]
+            # Store the data in a JSON Array with dictionarys with the column
+            # name as the key and the value in the given row and column as the 
+            # value in the dictionary.
             data = [dict(zip(column_names, row)) for row in rows]
+    # Return the result as a json object
     return jsonify(data)
 
-
+## Returns all the values in a given column, in a given table
 @app.route('/datafilters/<string:table_name>/<string:column_name>')
 def datafilters(table_name, column_name):
     with pool.acquire() as connection:
@@ -76,7 +87,10 @@ def datafilters(table_name, column_name):
             data = [row[0] for row in rows]
     return data
 
-
+## Returns the tuples in a table based on the JSON POST data
+## NOTE: The JSON object has to be a dictionary that contains the column as the 
+##       key and the value. The value is used in the WHERE clause of the SQL
+##       query for equality comparison. Multiple key, value pairs are allowed.
 @app.route('/get_tuples/<string:table_name>', methods=['POST'])
 def get_tuples(table_name):
     # Only accept post requests
@@ -94,7 +108,8 @@ def get_tuples(table_name):
         if json_post_data[key] != "All":
             if temp_count != 0:
                 where_clause += " AND "
-
+            
+            # Add to the where cluase with the new condition
             where_clause += str(key) + "='" + str(json_post_data[key]) + "'"
             temp_count += 1
     
@@ -102,8 +117,6 @@ def get_tuples(table_name):
     sql_stmt = "SELECT * FROM {}".format(table_name)
     if (temp_count > 0):
         sql_stmt += " WHERE {}".format(where_clause)
-
-    #print(sql_stmt)
     
     # Run the query through the db
     with pool.acquire() as connection:
@@ -117,7 +130,8 @@ def get_tuples(table_name):
                     "columns" : [], 
                     "data" : [] 
                 }
-
+            
+            # Put the data into a format the frontend is expecting (JSON)
             for c in column_names:
                 payload["columns"].append({ "key":c, "name":c })
 
@@ -132,18 +146,23 @@ def get_tuples(table_name):
 ## Get all of the user's bookmarks
 @app.route('/bookmarks/get/', methods=['GET'])
 def get_user_bookmarks():
+    # Check the if the current user is logged in
     user_id = get_curr_user_id()
     if (user_id is None):
         return "Must be logged in to retrieve bookmarks"
-
+    
+    # Return the user's bookmarks if they are logged in
     return fetch_user_bookmarks(pool, int(user_id));
 
+
+## Adds a bookmark to the current user's bookmarks
 ## E.G. http://localhost:8080/bookmarks/add?state='florida'&tag='test'&md='cigarette sales'&pd='signage required'&pgd='enforcement'
 @app.route('/bookmarks/add/', methods=['GET'])
 def route_add_user_bookmark():
     # Query arguments
     qa = request.args
 
+    # Check the if the current user is logged in
     user_id = get_curr_user_id()
     if (user_id is None):
         return "Must be logged in to add a bookmark"
@@ -152,10 +171,12 @@ def route_add_user_bookmark():
     # Must have a tag and user_id
     if (qa["tag"] is None or qa["tag"] == ""):
         return "A bookmark must have a tag and user id"
-
+    
+    # User is logged in so add the bookmark
     return add_user_bookmark(pool, user_id, qa["md"], qa["pd"], qa["pgd"], qa["state"], qa["tag"]);
 
 ## Delete a user's bookmark
+## EXAMPLE: http://localhost:8080/bookmarks/delete/mybookmark
 @app.route('/bookmarks/delete/<tag>', methods=['GET'])
 def route_delete_user_bookmark(tag):
     user_id = get_curr_user_id()
@@ -165,8 +186,6 @@ def route_delete_user_bookmark(tag):
     return delete_user_bookmark(pool, user_id, tag);
 
 ## Login a user
-## TODO: change this to a POST request so the user's password is not stored
-##       in the url history
 ## EXAMPLE: http://localhost:8080/login/
 @app.route('/login', methods=['POST'])
 def route_login_user():
@@ -181,8 +200,6 @@ def route_login_user():
     return login_user(pool, bcrypt, json_post_data["email"], json_post_data["password"]);
 
 ## Create a user
-## TODO: change this to a POST request so the user's info and password is not 
-##       stored in the url history
 ## EXAMPLE: http://localhost:8080/login/create
 @app.route('/login/create', methods=['POST'])
 def route_create_user():
@@ -193,25 +210,32 @@ def route_create_user():
     # NOTE: json.loads is very picky about formating of json
     json_post_data = json.loads(request.get_data().decode('utf-8'))
     
+    # Send the user a welcome message
     SendEmail(json_post_data["fname"], json_post_data["email"], "Welcome", 4)
 
-
+    # Return the result from creating a user
     return create_user(pool, bcrypt, json_post_data["email"], json_post_data["password"], json_post_data["fname"], json_post_data["lname"]);
 
+## Logout the current user
+## EXAMPLE: http://localhost:8080/logout
 @app.route('/logout', methods=['GET'])
 def route_logout_user():
     return logout_user();
 
 ## Testing endpoint
+## EXAMPLE: http://localhost:8080/login/get_user_id
 @app.route('/login/get_user_id', methods=['GET'])
 def route_curr_user():
     return str(get_curr_user_id())
 
+## Return the given number of top query results
+## EXAMPLE: http://localhost:8080/topqueries/get/5
 @app.route('/topqueries/get/<int:count>', methods=['GET'])
 def route_get_top_queries(count):
     return get_top_queries(pool, count);
 
-
+## Returns the tuples of a given user's previous feedback
+## EXAMPLE: http://localhost:8080/feedback/get/5
 @app.route('/feedback/get/<int:user_id>', methods=['GET'])
 def route_get_feedback(user_id):
     if (user_id == 0):
@@ -219,7 +243,10 @@ def route_get_feedback(user_id):
 
     return get_feedback(pool, user_id)
 
-
+## Adds the feedback from the current user
+## NOTE: Data is received from the frontend as a POST request which is JSON
+##       formatted.
+## EXAMPLE: http://localhost:8080/feedback/add
 @app.route('/feedback/add', methods=['POST'])
 def route_add_feedback():
     if (request.method != 'POST'):
@@ -230,7 +257,8 @@ def route_add_feedback():
     json_post_data = json.loads(request.get_data().decode('utf-8'))
     
     return add_feedback(pool, json_post_data)
-        
+
+## Sends a user an email based on the responseType number given## Sends a user an email based on the responseType number given## Sends a user an email based on the responseType number given## Sends a user an email based on the responseType number given## Sends a user an email based on the responseType number given## Sends a user an email based on the responseType number given## Sends a user an email based on the responseType number given## Sends a user an email based on the responseType number given        
 def SendEmail(username, userEmail, topic, responseType):
     # Full credit to https://www.geeksforgeeks.org/how-to-send-automated-email-messages-in-python/ for module selection and overall approach.
 
@@ -309,7 +337,7 @@ Please be advised - this inbox is not monitored for replies.
      # close connection
     smtp.quit()
 
-
+## Run the Flask app
 if __name__ == '__main__':
     pool = start_pool()
     app.run(host="localhost", port=8080, debug=True)
