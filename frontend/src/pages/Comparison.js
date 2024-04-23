@@ -5,11 +5,13 @@ import CustomDropdown from "./CustomDropdown";
 import DataViewer from "./DataViewer";
 
 function SubmitButton({ list, columns }) {
+    // can change dataset, status message, bool to display data
     const [validationMessage, setValidationMessage] = useState("");
     const [showData, setShowData] = useState(false);
     const [dataset, setDataset] = useState({ data: [] });
 
     function handleClick() {
+        //ensure list is filled
         if (!list || list.length === 0) {
             console.log("Error 1")
             setValidationMessage(`Please fill in all fields.`);
@@ -25,7 +27,8 @@ function SubmitButton({ list, columns }) {
                 return;
             }
         }
-
+        //use list[] in this version as opposed to method used in Search.js because multiple queries will conflict
+        //set dataset and display the data
         fetch("/get_tuples/KASINSPARKS.CENLaw", {
             method: "POST",
             body: '{' +
@@ -54,6 +57,7 @@ function SubmitButton({ list, columns }) {
             </div>
             <div className="scrollable-container">
                 <div className="scrollable-content">
+            {/* conditionally render dataset if button has been clicked */}
             {showData && <DataViewer dataset={dataset} columns={columns} />}
             </div>
             </div>
@@ -69,6 +73,7 @@ function Search() {
     const [provisionDescCol, setProvisionDescCol] = useState([]);
 
     useEffect(() => {
+        // open opening the page, retrieve all columns
         const fetchStateNameCol = async () => {
             const stateNameRes = await fetch("/datafilters/kasinsparks.CENLaw/StateName");
             const stateNameResult = await stateNameRes.json();
@@ -120,12 +125,15 @@ function Search() {
         for (var i = 0; i < provisionDescCol.length; ++i) {
             provisionDescRow.push(provisionDescCol[i]);
         }
+
+    //store all columns to be used in DataViewer
     const columns = [stateNameRow, measureDescRow, provisionGroupDescRow, provisionDescRow];
 
 
     return (
         <body>
             <div className="Login">
+                {/* same as Search.js, occupies list with choices, send to SubmitButton */}
                 <br />
                 <h3>Select a state or territory:</h3>
                 <CustomDropdown
@@ -167,6 +175,7 @@ function Search() {
 }
 
 function Comparison() {
+    // render search components with thin black separator line between
     return (
         <div className="comp-feature">
             <div className="scrollable-container">

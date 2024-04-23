@@ -4,6 +4,7 @@ import CustomDropdown from "./CustomDropdown";
 import DataViewer from "./DataViewer";
 
 function ComparisonButton() {
+    //take user to comparison feature if clicked
     const handleClick = () => {
       window.location.href = './Comparison';
     };
@@ -16,6 +17,7 @@ function SubmitButton({ list, columns }) {
     const [showData, setShowData] = useState(false);
     const [tag, setTag] = useState("");
     const [dataset, setDataset] = useState({ data: [] });
+    //changes bookmark name dynamically
     const handleTagChange = (event) => {
         setTag(event.target.value);
       };
@@ -23,6 +25,7 @@ function SubmitButton({ list, columns }) {
     function BookmarkButton() {
 
         const queryParams = {
+            //retrieve params to feed API to add bookmark
             state: "'" + document.getElementById("StateName").value + "'",
             tag: "'" + tag + "'",
             md: "'" + document.getElementById("MeasureDesc").value + "'",
@@ -30,9 +33,11 @@ function SubmitButton({ list, columns }) {
             pgd: "'" + document.getElementById("ProvisionGroupDesc").value + "'",
         }
 
+        // API route
         const Url = `/bookmarks/add/?state=${queryParams["state"]}&tag=${queryParams["tag"]}&md=${queryParams["md"]}&pd=${queryParams["pd"]}&pgd=${queryParams["pgd"]}`
 
         const handleBMClick = () => {
+            //attempt to add bookmark, return if no name
             if (tag == ""){
                 return;
             }
@@ -45,6 +50,7 @@ function SubmitButton({ list, columns }) {
     }
 
     function handleClick() {
+        //make sure list is unempty
         if (!list || list.length === 0) {
             console.log("Error 1")
             setValidationMessage(`Please fill in all fields.`);
@@ -61,6 +67,7 @@ function SubmitButton({ list, columns }) {
             }
         }
 
+        //retrieve relevant queried dataset, set it as dataset, and display it
         fetch("/get_tuples/KASINSPARKS.CENLaw", {
             method: "POST",
             body: '{' +
@@ -80,6 +87,7 @@ function SubmitButton({ list, columns }) {
 
     return (
         <div>
+            {/* render submit button and conditionally display dataset */}
             <button className="button" onClick={handleClick}>
                 Submit
             </button>
@@ -91,6 +99,7 @@ function SubmitButton({ list, columns }) {
             </div>
             {showData && <DataViewer dataset={dataset} columns={columns} />}
             <div>{showData && <h3 style={{ color: "#2a3653" }}>Add this query as a bookmark?</h3>}</div>
+            {/* conditionally render bookmark addition functionality */}
             <div>{showData && 
             <input
             type="text"
@@ -106,6 +115,7 @@ function SubmitButton({ list, columns }) {
 }
 
 function Download(dataset) {
+    // allow user to download displayed dataset
     const [validDownload, setValidDownload] = useState(true);
     function handleClick() {
         /**
@@ -143,6 +153,7 @@ function Search() {
     const [provisionGroupDescCol, setProvisionGroupDescCol] = useState([]);
     const [provisionDescCol, setProvisionDescCol] = useState([]);
 
+    // retrieve column values
     useEffect(() => {
         const fetchStateNameCol = async () => {
             const stateNameRes = await fetch("/datafilters/kasinsparks.CENLaw/StateName");
@@ -194,15 +205,19 @@ function Search() {
         for (var i = 0; i < provisionDescCol.length; ++i) {
             provisionDescRow.push(provisionDescCol[i]);
         }
+
+    // values fed into DataViewer to display later
     const columns = [stateNameRow, measureDescRow, provisionGroupDescRow, provisionDescRow];
 
 
     return (
         <div>
         <div style={{textAlign: 'right', margin: '10px 20px 0px auto' }}>
+        {/* display comparison button in the top right of the page */}
         <ComparisonButton/>
         </div>
         <body>
+            {/* dropdowns allow user to set their queries for the dataset */}
             <div className="Search">
                 <br />
                 <h3>Select a state or territory:</h3>
@@ -237,8 +252,10 @@ function Search() {
                     updateList={updateList}
                     return_index={3}
                 />
+                {/* displays current list of selected choices */}
                 <p>Selected choices: { list.join(", ") }</p>
             </div>
+            {/* will render the requested dataset */}
             <SubmitButton list={list} columns={columns} />
         </body>
         </div>

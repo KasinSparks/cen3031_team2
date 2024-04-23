@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import "./Navbar.css"; // Import CSS file for styling
 
 function Navbar() {
+  // navbar renders atop each page and allows user to travel between pages
   return (
     <nav>
       <ul className="navbar">

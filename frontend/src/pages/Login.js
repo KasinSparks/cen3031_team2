@@ -18,6 +18,7 @@ function Login() {
   };
 
   function loginUser() {
+    //POST request to log in user
      fetch("/login", {
         method: "POST",
         body: '{"email":"' + email + '",' + '"password":"' + password + '"}'
@@ -37,6 +38,7 @@ function Login() {
   }, [isloggedin]);
 
   function isLoggedIn() {
+    //verify if user logged in
     fetch("/login/get_user_id")
       .then(res => res.text())
       .then(text => {
@@ -45,6 +47,7 @@ function Login() {
   }
 
   function createUser() {
+    //create user w/ fetch POST request, will add to CENUser dataset if successful
     fetch("/login/create", {
         method: "POST",
         body: '{' +
@@ -62,6 +65,7 @@ function Login() {
         .catch(err => err);
   }
  
+  //render if user is currently logged in, allow them to log out
   if (isloggedin) {
     return (
         <body>
@@ -79,6 +83,7 @@ function Login() {
       return (
         <body>
           <div className="Login">
+            {/* Fields allow user to log in */}
             <h1>Login</h1>
           </div>
           <div>
@@ -109,6 +114,7 @@ function Login() {
           </div>
           <br /><br />
           <div className="Login">
+            {/* Fields that allow user to register an account on the site */}
             <h1>Register</h1>
           </div>
           <div>

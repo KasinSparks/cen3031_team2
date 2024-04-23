@@ -4,6 +4,7 @@ import DataGrid from "react-data-grid";
 import "./DataViewer.css";
 
 function DataViewer(dataset, columns) {
+    // manipulate row, column data
     const [rowdata, setRowdata] = useState([]);
     const [coldata, setColdata] = useState([]);
 
