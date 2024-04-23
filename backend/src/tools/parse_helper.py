@@ -1,3 +1,4 @@
+## DEPRECATED
 def parse_simple_csv(input, result):
     # Check for empty string
     if len(input) == 0:
@@ -14,6 +15,7 @@ def parse_simple_csv(input, result):
     if  last_pos < len(input) and i != last_pos:
         result.append(input[last_pos : last_pos + (i - last_pos)])
 
+## DEPRECATED
 def parse_req_cols(input, result):
     # Check for empty string
     if len(input) == 0:
@@ -42,7 +44,7 @@ def parse_req_cols(input, result):
             break
         i+=1
 
-
+## DEPRECATED
 def parse_post_body_params(body) -> {}:
     output = {}
     # Check for empty string
